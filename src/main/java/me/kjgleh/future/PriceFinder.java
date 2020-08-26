@@ -17,7 +17,14 @@ public class PriceFinder {
     public List<String> findPrices(String product) {
         return shops.stream()
                 .map(
-                        shop -> String.format("%s 가격은 %.2f", shop.getName(), shop.getPrice(product))
-        ).collect(Collectors.toList());
+                        shop -> String.format("%s 가격은 %.2f", shop.getName(), shop.getPrice(product)))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> findPricesWithParallel(String product) {
+        return shops.parallelStream()
+                .map(
+                        shop -> String.format("%s 가격은 %.2f", shop.getName(), shop.getPrice(product)))
+                .collect(Collectors.toList());
     }
 }
