@@ -2,6 +2,7 @@ package me.kjgleh.future;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class PriceFinder {
@@ -25,6 +26,17 @@ public class PriceFinder {
         return shops.parallelStream()
                 .map(
                         shop -> String.format("%s 가격은 %.2f", shop.getName(), shop.getPrice(product)))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> findPricesWithCompletableFuture(String product) {
+        List<CompletableFuture<String>> priceFutures = shops.stream()
+                .map(
+                        shop -> CompletableFuture.supplyAsync(
+                                () -> String.format("%s 가격은 %.2f", shop.getName(), shop.getPrice(product))))
+                .collect(Collectors.toList());
+        return priceFutures.stream()
+                .map(CompletableFuture::join)
                 .collect(Collectors.toList());
     }
 }
